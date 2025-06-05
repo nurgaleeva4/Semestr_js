@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Книжный каталог</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .screen {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Welcome screen */
+        .welcome-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .welcome-container h1 {
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        
+        .welcome-container input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .welcome-container button {
+            padding: 12px 30px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .welcome-container button:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Main screen */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+        
+        .filters {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        
+        .filter-group h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        
+        .filter-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .filter-actions {
+            margin-top: 20px;
+        }
+        
+        .filter-actions button {
+            padding: 8px 15px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .apply-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .reset-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .stats {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .stats h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .stats p {
+            margin-bottom: 5px;
+        }
+        
+        .regions-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .region-stat {
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .books-list {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        
+        .book-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .book-item:last-child {
+            border-bottom: none;
+        }
+        
+        .book-item h3 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .book-item p {
+            color: #666;
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome screen -->
+    <div id="welcome-screen" class="screen">
+        <div class="welcome-container">
+            <h1>Добро пожаловать!</h1>
+            <input type="text" id="username" placeholder="Введите ваше имя">
+            <button id="start-btn">Далее</button>
+        </div>
+    </div>
+    
+    <!-- Main screen -->
+    <div id="main-screen" class="screen hidden">
+        <div class="container">
+            <header>
+                <h1 id="greeting">Привет, пользователь!</h1>
+            </header>
+            
+            <div class="content">
+                <aside class="filters">
+                    <div class="filter-group">
+                        <h3>Фильтры по жанру</h3>
+                        <label><input type="checkbox" name="genre" value="fiction"> Художественная литература</label>
+                        <label><input type="checkbox" name="genre" value="fantasy"> Фэнтези</label>
+                        <label><input type="checkbox" name="genre" value="sci-fi"> Научная фантастика</label>
+                        <label><input type="checkbox" name="genre" value="mystery"> Детективы</label>
+                        <label><input type="checkbox" name="genre" value="romance"> Романы</label>
+                        <label><input type="checkbox" name="genre" value="non-fiction"> Научно-популярная</label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Сортировка</h3>
+                        <label><input type="radio" name="sort" value="title-asc" checked> По названию (А-Я)</label>
+                        <label><input type="radio" name="sort" value="title-desc"> По названию (Я-А)</label>
+                        <label><input type="radio" name="sort" value="year-asc"> По году (старые)</label>
+                        <label><input type="radio" name="sort" value="year-desc"> По году (новые)</label>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h3>Дополнительно</h3>
+                        <label><input type="checkbox" name="additional" value="bestsellers"> Только бестселлеры</label>
+                        <label><input type="checkbox" name="additional" value="new"> Только новинки</label>
+                        <label><input type="checkbox" name="additional" value="available"> Только доступные</label>
+                    </div>
+                    
+                    <div class="filter-actions">
+                        <button id="apply-filters" class="apply-btn">Применить</button>
+                        <button id="reset-filters" class="reset-btn">Сбросить</button>
+                    </div>
+                    
+                    <input type="text" id="search-input" class="search-input" placeholder="Поиск по названию или автору...">
+                </aside>
+                
+                <main>
+                    <div class="stats">
+                        <h3>Статистика</h3>
+                        <p><strong>Всего книг:</strong> <span id="total-books">0</span></p>
+                        <p><strong>Общее количество страниц:</strong> <span id="total-pages">0</span></p>
+                        <p><strong>Средний объем:</strong> <span id="avg-pages">0 стр.</span></p>
+                        
+                        <h4>Распределение по жанрам:</h4>
+                        <div class="regions-stats" id="genres-stats">
+                            <!-- Будет заполнено JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="books-list" id="books-container">
+                        <!-- Будет заполнено JavaScript -->
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Пример данных книг
+        const books = [
+            // Художественная литература
+            { title: "Преступление и наказание", author: "Фёдор Достоевский", genre: "fiction", year: 1866, pages: 671, bestseller: true },
+            { title: "Мастер и Маргарита", author: "Михаил Булгаков", genre: "fiction", year: 1967, pages: 384, bestseller: true },
+            { title: "Война и мир", author: "Лев Толстой", genre: "fiction", year: 1869, pages: 1225 },
+            { title: "Анна Каренина", author: "Лев Толстой", genre: "fiction", year: 1877, pages: 864 },
+            { title: "Собачье сердце", author: "Михаил Булгаков", genre: "fiction", year: 1925, pages: 192 },
+            
+            // Фэнтези
+            { title: "Гарри Поттер и философский камень", author: "Дж. К. Роулинг", genre: "fantasy", year: 1997, pages: 432, bestseller: true },
+            { title: "Властелин колец: Братство кольца", author: "Дж. Р. Р. Толкин", genre: "fantasy", year: 1954, pages: 423, bestseller: true },
+            { title: "Игра престолов", author: "Джордж Р. Р. Мартин", genre: "fantasy", year: 1996, pages: 694, bestseller: true },
+            
+            // Научная фантастика
+            { title: "1984", author: "Джордж Оруэлл", genre: "sci-fi", year: 1949, pages: 328, bestseller: true },
+            { title: "451 градус по Фаренгейту", author: "Рэй Брэдбери", genre: "sci-fi", year: 1953, pages: 256, bestseller: true },
+            { title: "Солярис", author: "Станислав Лем", genre: "sci-fi", year: 1961, pages: 204 },
+            
+            // Детективы
+            { title: "Убийство в Восточном экспрессе", author: "Агата Кристи", genre: "mystery", year: 1934, pages: 256, bestseller: true },
+            { title: "Шерлок Холмс: Собака Баскервилей", author: "Артур Конан Дойл", genre: "mystery", year: 1902, pages: 256 },
+            { title: "Десять негритят", author: "Агата Кристи", genre: "mystery", year: 1939, pages: 272, bestseller: true },
+            { title: "Девушка с татуировкой дракона", author: "Стиг Ларссон", genre: "mystery", year: 2005, pages: 672, bestseller: true, new: true },
+            
+            // Романы
+            { title: "Три товарища", author: "Эрих Мария Ремарк", genre: "romance", year: 1936, pages: 480 },
+            { title: "Гордость и предубеждение", author: "Джейн Остин", genre: "romance", year: 1813, pages: 432, bestseller: true },
+            { title: "Поющие в терновнике", author: "Колин Маккалоу", genre: "romance", year: 1977, pages: 692 },
+            { title: "Над пропастью во ржи", author: "Джером Д. Сэлинджер", genre: "romance", year: 1951, pages: 277, bestseller: true },
+            
+            // Научно-популярные
+            { title: "Краткая история времени", author: "Стивен Хокинг", genre: "non-fiction", year: 1988, pages: 256, bestseller: true },
+            { title: "Sapiens: Краткая история человечества", author: "Юваль Ной Харари", genre: "non-fiction", year: 2011, pages: 512, bestseller: true, new: true },
+            { title: "Одураченные случайностью", author: "Нассим Николас Талеб", genre: "non-fiction", year: 2001, pages: 368 },
+            { title: "Архипелаг ГУЛАГ", author: "Александр Солженицын", genre: "non-fiction", year: 1973, pages: 1424 },
+            
+            // Новинки (последние 5 лет)
+            { title: "Тонкое искусство пофигизма", author: "Марк Мэнсон", genre: "non-fiction", year: 2021, pages: 224, new: true },
+            { title: "Песнь Ахилла", author: "Мадлен Миллер", genre: "fiction", year: 2022, pages: 416, new: true },
+            { title: "Проект 'Счастье'", author: "Гретхен Рубин", genre: "non-fiction", year: 2020, pages: 320, new: true },
+            { title: "Миддлмарч", author: "Джордж Элиот", genre: "fiction", year: 2023, pages: 880, new: true }
+        ];
+
+        // Приветственный экран
+        document.getElementById('start-btn').addEventListener('click', function() {
+            const username = document.getElementById('username').value.trim();
+            if (username) {
+                document.getElementById('welcome-screen').classList.add('hidden');
+                document.getElementById('main-screen').classList.remove('hidden');
+                document.getElementById('greeting').textContent = `Привет, ${username}!`;
+                
+                // Загрузка данных и инициализация
+                loadBooks();
+            } else {
+                alert('Пожалуйста, введите ваше имя');
+            }
+        });
+        
+        function loadBooks() {
+            displayBooks(books);
+            updateStats(books);
+        }
+        
+        function displayBooks(booksToDisplay) {
+            const container = document.getElementById('books-container');
+            container.innerHTML = '';
+            
+            if (booksToDisplay.length === 0) {
+                container.innerHTML = '<p>Книги не найдены. Попробуйте изменить параметры поиска.</p>';
+                return;
+            }
+            
+            booksToDisplay.forEach(book => {
+                const bookElement = document.createElement('div');
+                bookElement.className = 'book-item';
+                
+                let newBadge = '';
+                if (book.new) {
+                    newBadge = '<span style="color: red; font-weight: bold;">НОВИНКА!</span> ';
+                }
+                
+                let bestsellerBadge = '';
+                if (book.bestseller) {
+                    bestsellerBadge = '<span style="color: green; font-weight: bold;">БЕСТСЕЛЛЕР</span> ';
+                }
+                
+                bookElement.innerHTML = `
+                    <h3>${newBadge}${bestsellerBadge}${book.title}</h3>
+                    <p><strong>Автор:</strong> ${book.author}</p>
+                    <p><strong>Год:</strong> ${book.year} | <strong>Страниц:</strong> ${book.pages} | <strong>Жанр:</strong> ${book.genre}</p>
+                `;
+                container.appendChild(bookElement);
+            });
+        }
+        
+        function updateStats(books) {
+            document.getElementById('total-books').textContent = books.length;
+            
+            const totalPages = books.reduce((sum, book) => sum + (book.pages || 0), 0);
+            document.getElementById('total-pages').textContent = totalPages;
+            
+            const avgPages = Math.round(totalPages / books.length);
+            document.getElementById('avg-pages').textContent = `${avgPages} стр.`;
+            
+            // Статистика по жанрам
+            const genreStats = {};
+            books.forEach(book => {
+                genreStats[book.genre] = (genreStats[book.genre] || 0) + 1;
+            });
+            
+            const genresContainer = document.getElementById('genres-stats');
+            genresContainer.innerHTML = '';
+            
+            for (const genre in genreStats) {
+                const statElement = document.createElement('div');
+                statElement.className = 'region-stat';
+                statElement.textContent = `${genre}: ${genreStats[genre]}`;
+                genresContainer.appendChild(statElement);
+            }
+        }
+        
+        // Обработчики фильтров
+        document.getElementById('apply-filters').addEventListener('click', applyFilters);
+        document.getElementById('reset-filters').addEventListener('click', resetFilters);
+        document.getElementById('search-input').addEventListener('input', applyFilters);
+        
+        function applyFilters() {
+            const selectedGenres = Array.from(
+                document.querySelectorAll('input[name="genre"]:checked')
+            ).map(cb => cb.value);
+            
+            const sortOption = document.querySelector('input[name="sort"]:checked').value;
+            
+            const bestsellersOnly = document.querySelector('input[name="additional"][value="bestsellers"]').checked;
+            const newOnly = document.querySelector('input[name="additional"][value="new"]').checked;
+            const availableOnly = document.querySelector('input[name="additional"][value="available"]').checked;
+            
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            
+            let filteredBooks = [...books];
+            
+            // Фильтрация по жанрам
+            if (selectedGenres.length > 0) {
+                filteredBooks = filteredBooks.filter(book => 
+                    selectedGenres.includes(book.genre)
+                );
+            }
+            
+            // Фильтрация по бестселлерам
+            if (bestsellersOnly) {
+                filteredBooks = filteredBooks.filter(book => book.bestseller);
+            }
+            
+            // Фильтрация по новинкам
+            if (newOnly) {
+                filteredBooks = filteredBooks.filter(book => book.new);
+            }
+            
+            // Фильтрация по доступности (в данном примере все книги доступны)
+            if (availableOnly) {
+                filteredBooks = filteredBooks.filter(book => true); // В реальном приложении здесь будет проверка доступности
+            }
+            
+            // Поиск по названию и автору
+            if (searchQuery) {
+                filteredBooks = filteredBooks.filter(book => 
+                    book.title.toLowerCase().includes(searchQuery) ||
+                    book.author.toLowerCase().includes(searchQuery)
+                );
+            }
+            
+            // Сортировка
+            switch(sortOption) {
+                case 'title-asc':
+                    filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
+                    break;
+                case 'title-desc':
+                    filteredBooks.sort((a, b) => b.title.localeCompare(a.title));
+                    break;
+                case 'year-asc':
+                    filteredBooks.sort((a, b) => a.year - b.year);
+                    break;
+                case 'year-desc':
+                    filteredBooks.sort((a, b) => b.year - a.year);
+                    break;
+            }
+            
+            displayBooks(filteredBooks);
+            updateStats(filteredBooks);
+        }
+        
+        function resetFilters() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            
+            document.querySelector('input[type="radio"][value="title-asc"]').checked = true;
+            document.getElementById('search-input').value = '';
+            
+            displayBooks(books);
+            updateStats(books);
+        }
+    </script>
+</body>
+</html>
